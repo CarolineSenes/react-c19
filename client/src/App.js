@@ -8,7 +8,7 @@ function App() {
   return (
     <div className={`d-flex flex-column ${styles.appContainer}`}>
       <Header />
-      <div className="flex-fill">
+      <div className="flex-fill d-flex flex-column">
         <Suspense>
           <Outlet />
         </Suspense>
