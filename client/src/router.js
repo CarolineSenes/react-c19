@@ -1,7 +1,8 @@
 import { lazy } from "react";
 import { createBrowserRouter } from "react-router-dom";
-import { rootLoader } from './loaders/rootLoader';
+import { rootLoader } from "./loaders/rootLoader";
 import App from "./App";
+import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 
 const Homepage = lazy(() => import("./pages/Homepage/Homepage"));
 const Signup = lazy(() => import("./pages/Signup/Signup"));
@@ -28,7 +29,11 @@ export const router = createBrowserRouter([
       },
       {
         path: "profile",
-        element: <Profile />,
+        element: (
+          <ProtectedRoute>
+            <Profile />
+          </ProtectedRoute>
+        ),
       },
     ],
   },
