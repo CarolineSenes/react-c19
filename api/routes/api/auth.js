@@ -29,14 +29,13 @@ router.post('/', async (req, res) => {
   }
 });
 
-// Route qui permet de récupérer l'utilisateur courant
 router.get('/current', async (req, res) => {
   const { token } = req.cookies;
   if (token) {
     try {
-      const decodedToken = jsonwebtoken.verify(token, keyPub);
+      const decodedToken = jsonwebtoken.verify(token, keyPub, { algorithms: ['RS256'] });
       const currentUser = await UserModel.findById(decodedToken.sub)
-        .select('-password -__v') // on enlève les propriétés "password" et "v" de la réponse de retour car infos inutiles
+        .select('-password -__v')
         .exec();
       if (currentUser) {
         return res.json(currentUser);
@@ -44,6 +43,7 @@ router.get('/current', async (req, res) => {
         return res.json(null);
       }
     } catch (e) {
+      console.log(e);
       return res.json(null);
     }
   } else {
