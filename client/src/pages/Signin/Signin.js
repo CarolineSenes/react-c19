@@ -2,7 +2,7 @@ import styles from "./Signin.module.scss";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { signin } from '../../apis/auth';
+import { signin } from "../../apis/auth";
 
 function Signin() {
   const validationSchema = yup.object({
@@ -47,7 +47,7 @@ function Signin() {
         onSubmit={submit}
         className={`${styles.form} d-flex flex-column card p-20`}
       >
-        <h2 className="mb-10">Inscription</h2>
+        <h2 className="mb-10">Connexion</h2>
         <div className="mb-10 d-flex flex-column">
           <label htmlFor="email">Email</label>
           <input type="text" name="email" {...register("email")} />
@@ -67,7 +67,7 @@ function Signin() {
         )}
         <div>
           <button disabled={isSubmitting} className="btn btn-primary">
-            Inscription
+            Connexion
           </button>
         </div>
       </form>
