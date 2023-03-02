@@ -4,7 +4,7 @@ import styles from "./Header.module.scss";
 import { AuthContext } from "../../context";
 
 function Header() {
-  const { user } = useContext(AuthContext);
+  const { user, signout } = useContext(AuthContext);
 
   return (
     <header className={`${styles.header} d-flex flex-row align-items-center`}>
@@ -18,7 +18,7 @@ function Header() {
           <NavLink to="profile" className="mr-15">
             Profil
           </NavLink>
-          <NavLink>Déconnexion</NavLink>
+          <NavLink onClick={() => signout()}>Déconnexion</NavLink>
         </ul>
       ) : (
         <ul className={styles.headerList}>

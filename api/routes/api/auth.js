@@ -1,10 +1,10 @@
-const UserModel = require('../../database/models/user.model');
-const bcrypt = require('bcrypt');
-const router = require('express').Router();
-const jsonwebtoken = require('jsonwebtoken');
-const { key, keyPub } = require('../../keys');
+const UserModel = require("../../database/models/user.model");
+const bcrypt = require("bcrypt");
+const router = require("express").Router();
+const jsonwebtoken = require("jsonwebtoken");
+const { key, keyPub } = require("../../keys");
 
-router.post('/', async (req, res) => {
+router.post("/", async (req, res) => {
   const { email, password } = req.body;
   try {
     const user = await UserModel.findOne({ email }).exec();
@@ -13,29 +13,32 @@ router.post('/', async (req, res) => {
         const token = jsonwebtoken.sign({}, key, {
           subject: user._id.toString(),
           expiresIn: 3600 * 24 * 30 * 6,
-          algorithm: 'RS256',
+          algorithm: "RS256",
         });
-        res.cookie('token', token, { httpOnly: true });
+        res.cookie("token", token, { httpOnly: true });
         res.json(user);
       } else {
-        res.status(400).json('Mauvais email/password');
+        res.status(400).json("Mauvais email/password");
       }
     } else {
-      res.status(400).json('Mauvais email/password');
+      res.status(400).json("Mauvais email/password");
     }
   } catch (e) {
     console.log(e);
-    res.status(400).json('Mauvais email/password');
+    res.status(400).json("Mauvais email/password");
   }
 });
 
-router.get('/current', async (req, res) => {
+// Route qui récupère les infos du user contenu dans le token
+router.get("/current", async (req, res) => {
   const { token } = req.cookies;
   if (token) {
     try {
-      const decodedToken = jsonwebtoken.verify(token, keyPub, { algorithms: ['RS256'] });
+      const decodedToken = jsonwebtoken.verify(token, keyPub, {
+        algorithms: ["RS256"],
+      });
       const currentUser = await UserModel.findById(decodedToken.sub)
-        .select('-password -__v')
+        .select("-password -__v")
         .exec();
       if (currentUser) {
         return res.json(currentUser);
@@ -49,6 +52,12 @@ router.get('/current', async (req, res) => {
   } else {
     return res.json(null);
   }
+});
+
+// Route déconnexion du user
+router.delete("/", (req, res) => {
+  res.clearCookie("token");
+  res.end();
 });
 
 module.exports = router;
